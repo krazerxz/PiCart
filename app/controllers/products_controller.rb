@@ -21,7 +21,7 @@ class ProductsController < ApplicationController
 
   # POST /products
   def create
-    @product = Product.new(product_params)
+    resolve product_params[:barcode]
 
     respond_to do |format|
       if @product.save
@@ -35,7 +35,6 @@ class ProductsController < ApplicationController
   end
 
   # PATCH/PUT /products/1
-  # PATCH/PUT /products/1.json
   def update
     respond_to do |format|
       if @product.update(product_params)
@@ -49,7 +48,6 @@ class ProductsController < ApplicationController
   end
 
   # DELETE /products/1
-  # DELETE /products/1.json
   def destroy
     @product.destroy
     respond_to do |format|
@@ -59,13 +57,20 @@ class ProductsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_product
-      @product = Product.find(params[:id])
-    end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def product_params
-      params.require(:product).permit(:name, :image)
-    end
+  def set_product
+    @product = Product.find(params[:id])
+  end
+
+  def resolve(barcode)
+    barcode = barcode.match(/0*(\w+)/)[1]
+    fail BarcodeException if barcode =~ /\D/
+    @product = Product.find_by(barcode: barcode)
+    @product = SearchUPCWraper.new.get_product_for(barcode) if @product.nil?
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def product_params
+    params.require(:product).permit(:name, :image, :barcode)
+  end
 end
