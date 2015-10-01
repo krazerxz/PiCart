@@ -15,7 +15,7 @@ class SearchUPCWraper
   private
 
   def fill_upc_form_with(code)
-    page =  @mechanize.get('http://www.searchupc.com')
+    page = @mechanize.get('http://www.searchupc.com')
     upc_form = page.form_with(name: 'searchupc')
     upc_form.field_with('q').value = code
     upc_form.click_button(upc_form.button_with(name: 'search'))
