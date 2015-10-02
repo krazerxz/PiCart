@@ -1,4 +1,4 @@
-class SearchUPCWraper
+class SearchUPCWrapper
   def initialize
     @mechanize = Mechanize.new
   end

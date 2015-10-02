@@ -27,7 +27,7 @@ describe ProductsController, type: :controller do
 
       before do
         allow(Product).to receive(:find_by).with(barcode: '87654321').and_return nil
-        allow(SearchUPCWraper).to receive(:new).and_return(search_upc_wrapper)
+        allow(SearchUPCWrapper).to receive(:new).and_return(search_upc_wrapper)
         allow(search_upc_wrapper).to receive(:get_product_for).with('87654321').and_return(resolved_product)
       end
 

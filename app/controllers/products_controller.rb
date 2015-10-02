@@ -66,7 +66,7 @@ class ProductsController < ApplicationController
     barcode = barcode.match(/0*(\w+)/)[1]
     fail BarcodeException if barcode =~ /\D/
     @product = Product.find_by(barcode: barcode)
-    @product = SearchUPCWraper.new.get_product_for(barcode) if @product.nil?
+    @product = SearchUPCWrapper.new.get_product_for(barcode) if @product.nil?
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
