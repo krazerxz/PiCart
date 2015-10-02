@@ -9,7 +9,7 @@ class SearchUPCWrapper
     return Product.new(barcode: upc_code) if images.empty?
     title = result.links[1].text
     url = images.first.url
-    Product.new(title: title, image: url, details_found: true, barcode: upc_code)
+    Product.new(name: title, image: url, barcode: upc_code)
   end
 
   private

@@ -1,5 +1,6 @@
 class ProductsController < ApplicationController
   before_action :set_product, only: [:show, :edit, :update, :destroy]
+  protect_from_forgery except: :create
 
   # GET /products
   def index
@@ -21,7 +22,8 @@ class ProductsController < ApplicationController
 
   # POST /products
   def create
-    resolve product_params[:barcode]
+    barcode = product_params[:barcode]
+    resolve_and_create barcode
 
     respond_to do |format|
       if @product.save
@@ -62,7 +64,7 @@ class ProductsController < ApplicationController
     @product = Product.find(params[:id])
   end
 
-  def resolve(barcode)
+  def resolve_and_create(barcode)
     barcode = barcode.match(/0*(\w+)/)[1]
     fail BarcodeException if barcode =~ /\D/
     @product = Product.find_by(barcode: barcode)
