@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'bootstrap_form'
 gem 'coffee-rails'
 gem 'jbuilder'
 gem 'jquery-rails'
@@ -8,7 +9,7 @@ gem 'rails'
 gem 'sass-rails'
 gem 'sdoc', group: :doc
 gem 'pg'
-gem 'turbolinks'
+gem 'twitter-bootstrap-rails'
 gem 'uglifier'
 
 group :development, :test do

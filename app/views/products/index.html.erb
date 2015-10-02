@@ -1,12 +1,13 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Listing Products</h1>
+<h1>Product Database</h1>
 
 <table>
   <thead>
     <tr>
+      <th></th>
       <th>Name</th>
-      <th>Image</th>
+      <th>Options</th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -14,8 +15,8 @@
   <tbody>
     <% @products.each do |product| %>
       <tr>
+        <td><%= image_tag product.image %></td>
         <td><%= product.name %></td>
-        <td><%= product.image %></td>
         <td><%= link_to 'Show', product %></td>
         <td><%= link_to 'Edit', edit_product_path(product) %></td>
         <td><%= link_to 'Destroy', product, method: :delete, data: { confirm: 'Are you sure?' } %></td>
