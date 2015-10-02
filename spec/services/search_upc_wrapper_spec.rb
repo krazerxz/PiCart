@@ -13,37 +13,40 @@ describe SearchUPCWrapper do
     it 'loads the searchupc website' do
       expect(mechanize).to receive(:get).with('http://www.searchupc.com')
       SearchUPCWrapper.new.get_product_for('1234')
-
     end
 
     it 'searches for the given upc code' do
       expect(field).to receive(:value=).with('1234')
       expect(search_form).to receive(:click_button) # which buttton?
-      #upc_form.click_button(upc_form.button_with(name: 'search'))
+      # upc_form.click_button(upc_form.button_with(name: 'search'))
       SearchUPCWrapper.new.get_product_for('1234')
     end
 
     context 'product found on search upc' do
-      let(:result_data) { double(:result_data, images:[{name: 'Product Image'}], links:[nil,'a_product'])}
+      let(:product_image)   { double(title: 'Product Image', url: 'a_url') }
+      let(:product_link)    { double(text: 'a_product') }
+      let(:result_data)     { double(:result_data, images: [product_image], links: [nil, product_link]) }
+      let(:product_details) { { name: 'a_product', image: 'a_url', barcode: '1234' } }
 
       before do
         allow(search_form).to receive(:click_button).and_return(result_data)
       end
 
       it 'creates product using found details' do
-        product_details = {name: 'a_product', image: 'a_url', barcode: '1234'}
         expect(Product).to receive(:new).with(product_details)
         SearchUPCWrapper.new.get_product_for('1234')
       end
 
       it 'returns the product' do
-        product = SearchUPCWrapper.new.get_product_for('1234')
-        expect(product).to eq nil
+        allow(Product).to receive(:new).with(product_details).and_return('the_resolved_product')
+        placeholder_product = SearchUPCWrapper.new.get_product_for('1234')
+        expect(placeholder_product).to eq 'the_resolved_product'
       end
     end
 
     context 'product not found on search upc' do
-      let(:result_data) { double(:result_data, images:[{name: 'nothing here'}])}
+      let(:product_image) { double(title: 'nothing here') }
+      let(:result_data) { double(:result_data, images: [product_image]) }
 
       before do
         allow(search_form).to receive(:click_button).and_return(result_data)
@@ -55,8 +58,9 @@ describe SearchUPCWrapper do
       end
 
       it 'returns the placeholder product' do
+        allow(Product).to receive(:new).with(barcode: '1234').and_return('the_product')
         placeholder_product = SearchUPCWrapper.new.get_product_for('1234')
-        expect(placeholder_product).to eq nil
+        expect(placeholder_product).to eq 'the_product'
       end
     end
   end
