@@ -3,23 +3,18 @@
 <h1>Product Database</h1>
 
 <table>
-  <thead>
-    <tr>
-      <th></th>
-      <th>Name</th>
-      <th>Options</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
   <tbody>
     <% @products.each do |product| %>
       <tr>
         <td><%= image_tag product.image %></td>
         <td><%= product.name %></td>
-        <td><%= link_to 'Show', product %></td>
-        <td><%= link_to 'Edit', edit_product_path(product) %></td>
-        <td><%= link_to 'Destroy', product, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td>
+          <div class='btn-group'>
+            <%= link_to 'Show', product, class: 'btn btn-primary'%>
+            <%= link_to 'Edit', edit_product_path(product), class: 'btn btn-info' %>
+            <%= link_to 'Destroy', product, method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+          </div>
+        </td>
       </tr>
     <% end %>
   </tbody>
