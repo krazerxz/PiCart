@@ -5,7 +5,7 @@
 <% @products.each do |product| %>
   <div class='row'>
     <div class="col-md-3">
-      <%= image_tag product.image %>
+      <%= image_tag(product.image, class: 'center-block') %>
     </div>
     <div class="col-md-6">
       <%= product.name %>
