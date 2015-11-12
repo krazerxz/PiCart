@@ -1,23 +1,24 @@
+require 'net/http'
+require 'json'
+
 class SearchUPCWrapper
-  def initialize
-    @mechanize = Mechanize.new
+  API_TOKEN = Rails.application.secrets.search_upc_api_key
+  SEARCH_UPC_API_URL = "http://www.searchupc.com/handlers/upcsearch.ashx?request_type=3&access_token=#{API_TOKEN}&upc="
+
+  def self.get_product_for(upc_code)
+    url = "#{SEARCH_UPC_API_URL}#{upc_code}"
+    uri = URI(url)
+    raw_response = Net::HTTP.get(uri)
+    response = JSON.parse(raw_response)['0']
+    generate_product_using response, upc_code
   end
 
-  def get_product_for(upc_code)
-    result = fill_upc_form_with upc_code
-    images = result.images.select { |image| image.title == 'Product Image' }
-    return Product.new(barcode: upc_code) if images.empty?
-    title = result.links[1].text
-    url = images.first.url
+  def self.generate_product_using(response, upc_code)
+    return Product.new(barcode: upc_code) if response.nil? || response['imageurl'] == 'N/A'
+    title = response['productname']
+    url = response['imageurl']
     Product.new(name: title, image: url, barcode: upc_code)
   end
 
-  private
-
-  def fill_upc_form_with(code)
-    page = @mechanize.get('http://www.searchupc.com')
-    upc_form = page.form_with(name: 'searchupc')
-    upc_form.field_with('q').value = code
-    upc_form.click_button(upc_form.button_with(name: 'search'))
-  end
+  private_class_method :generate_product_using
 end

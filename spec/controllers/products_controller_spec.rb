@@ -22,22 +22,20 @@ describe ProductsController, type: :controller do
     end
 
     context 'a product with the given barcode could not be found in the local database' do
-      let(:search_upc_wrapper) { double(:search_upc_wrapper) }
-      let(:resolved_product)   { double(:product, save: nil) }
+      let(:resolved_product) { double(:product, save: nil) }
 
       before do
         allow(Product).to receive(:find_by).with(barcode: '87654321').and_return nil
-        allow(SearchUPCWrapper).to receive(:new).and_return(search_upc_wrapper)
-        allow(search_upc_wrapper).to receive(:get_product_for).with('87654321').and_return(resolved_product)
+        allow(SearchUPCWrapper).to receive(:get_product_for).with('87654321').and_return(resolved_product)
       end
 
       it 'should strip leading zeros' do
-        expect(search_upc_wrapper).to receive(:get_product_for).with('87654321')
+        expect(SearchUPCWrapper).to receive(:get_product_for).with('87654321')
         post :create, product: { barcode: '0087654321' }
       end
 
       it 'should resolve the product for the given barcode' do
-        expect(search_upc_wrapper).to receive(:get_product_for).with('87654321')
+        expect(SearchUPCWrapper).to receive(:get_product_for).with('87654321')
         post :create, product: { barcode: '87654321' }
       end
 

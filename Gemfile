@@ -4,7 +4,6 @@ gem 'bootstrap_form'
 gem 'coffee-rails'
 gem 'jbuilder'
 gem 'jquery-rails'
-gem 'mechanize'
 gem 'rails'
 gem 'sass-rails'
 gem 'sdoc', group: :doc
