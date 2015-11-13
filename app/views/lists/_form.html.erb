@@ -4,12 +4,21 @@
       <h2><%= pluralize(@list.errors.count, "error") %> prohibited this list from being saved:</h2>
 
       <ul>
-      <% @list.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
+        <% @list.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
+
+  <div class='row'>
+    <div class="col-md-12">
+      <label for="list_name">List Name:</label>
+      <div class="field">
+        <%= f.text_field :name %>
+      </div>
+    </div>
+  </div>
 
   <div class="actions">
     <%= f.submit %>
